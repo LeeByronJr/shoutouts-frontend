@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import "./ShoutoutsByNameRoute.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Shoutout from "../models/Shoutout";
 import {
   addShoutout,
@@ -14,9 +14,9 @@ const ShoutoutsByNameRoute = () => {
   const [shoutouts, setShoutouts] = useState<Shoutout[]>([]);
   const name: string | undefined = useParams().name;
 
-  const loadShoutouts = async (): Promise<void> => {
+  const loadShoutouts = useCallback(async () => {
     setShoutouts(await getShoutoutsByName(name!));
-  };
+  }, [name]);
 
   const addShoutoutHandler = async (shoutout: Shoutout): Promise<void> => {
     await addShoutout(shoutout);
@@ -33,7 +33,7 @@ const ShoutoutsByNameRoute = () => {
     (async () => {
       loadShoutouts();
     })();
-  }, [name]);
+  }, [name, loadShoutouts]);
 
   return (
     <div className="ShoutoutsByNameRoute">
